@@ -1,0 +1,19 @@
+.stock-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+    animation: blink 1s infinite;
+}
+
+.in-stock{
+    background-color: hsl(120, 100%, 50%);
+}
+.low-stock{
+    background-color: hsl(39, 100%, 50%);
+}
+.out-of-stock{
+    background-color: hsl(0, 0%, 50%);
+}

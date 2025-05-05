@@ -1,0 +1,102 @@
+<ng-container>
+  <h1>test</h1>
+  <div style="display:flex; align-items: center; gap: 10px;">
+    <button class="action-btn edit-btn" nz-button nzType="link" nzShape="default" [disabled]="!selectedProduct" (click)="editProduct(selectedProduct)"><i class="ph ph-pen"></i>Edit</button>
+    <button class="action-btn delete-btn" nz-button nzType="text" nzDanger [disabled]="!selectedProduct" (click)="deleteProduct(selectedProduct)"><i class="ph ph-trash"></i>Delete</button>
+  </div>
+</ng-container>
+<nz-table
+  #productsTable
+  [nzData]="data"
+  [nzTotal]="total"
+  [nzPageSize]="pageSize"
+  [nzLoading]="loading"
+  [nzBordered]="true"
+  [nzShowSizeChanger]="true"
+  [nzShowQuickJumper]="true"
+  [nzPageIndex]="pageIndex"
+  [nzFrontPagination]="false"
+  [nzShowPagination]="false"
+  (nzPageIndexChange)="onPageIndexChange($event)"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+>
+  <thead>
+    <tr>
+      <th nzWidth="50px">#</th>
+      <th nzWidth="50px">ID</th>
+      <th nzWidth="350px">Title</th>
+      <th nzWidth="100px">Price</th>
+      <th nzWidth="50px">Stock</th>
+      <th nzWidth="150px">Brand</th>
+      <th nzWidth="50px">Rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of data; track item){
+      <tr [class.selected]="item === selectedProduct" (click)="updateSelection(item)">
+        <td>
+          <label nz-checkbox [(ngModel)]="item.checked" (ngModelChange)="updateSelection(item, $event)"></label>
+        </td>
+        <td>
+          #{{ item.id ?? '-' }}
+        </td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img class="product-cover" [src]="item.thumbnail" alt="thumb" width="50" height="50" />
+            {{ item.title ?? '-' }}
+          </div>
+        </td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>{{ (item.price | currency) ?? '-' }}</span>
+            @if(item.discountPercentage){
+                <nz-tag nzColor="green">-{{ item.discountPercentage }}%</nz-tag>
+            } @else {}
+          </div>
+        </td>
+        <td>
+          <app-stock 
+            [stockCount]="item.availabilityStatus" 
+            nz-tooltip 
+            [nzTooltipTitle]="'Stock: ' + item.stock">
+          </app-stock>
+        </td>
+        <td>
+          <span [style.color]="item.brand ? 'inherit' : 'gray'">
+            {{ item.brand || 'N/A' }}
+          </span>
+        </td>
+        <td>
+          @if(item.rating >= 4){
+            <nz-tag nzColor="green">{{ item.rating | number:'1.2-2' }}</nz-tag>
+          } @else if(item.rating >= 3){
+            <nz-tag nzColor="blue">{{ item.rating | number:'1.2-2' }}</nz-tag>
+          } @else if(item.rating >= 2){
+            <nz-tag nzColor="orange">{{ item.rating | number:'1.2-2' }}</nz-tag>
+          } @else if(item.rating >= 1){
+            <nz-tag nzColor="red">{{ item.rating | number:'1.2-2' }}</nz-tag>
+          } @else {
+            <nz-tag nzColor="red">N/A</nz-tag>
+          }
+        </td>
+      </tr>
+    }
+
+  </tbody>
+</nz-table>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+  <span>
+    {{ (pageIndex - 1) * pageSize + 1 }} - 
+    {{ Math.min(pageIndex * pageSize, total) }} of {{ total }}
+  </span>
+  <nz-pagination
+    [nzPageIndex]="pageIndex"
+    [nzTotal]="total"
+    [nzPageSize]="pageSize"
+    [nzShowSizeChanger]="true"
+    [nzShowQuickJumper]="true"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)">
+  </nz-pagination>
+</div>
