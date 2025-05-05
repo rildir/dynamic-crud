@@ -1,59 +1,84 @@
-# DynamicCrudApp
+# Dynamic CRUD App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+Bu proje, Angular ve Ng Zorro kullanılarak geliştirilmiş dinamik bir CRUD (Create, Read, Update, Delete) uygulamasıdır. Şu anda sadece ürünlerin listelenmesi (GET) özelliği aktif olup, ilerleyen aşamalarda POST, UPDATE ve DELETE işlemleri de eklenecektir.
 
-## Development server
+## Özellikler
 
-To start a local development server, run:
+- **Dinamik Ürün Listesi:**  
+  Ürünler, sayfalama ve filtreleme desteğiyle listelenir.
+- **Ng Zorro UI:**  
+  Modern ve kullanıcı dostu arayüz için Ng Zorro bileşenleri kullanılmıştır.
+- **Dinamik HTTP Client ve Base Service:**  
+  Tüm veri işlemleri, tekrar kullanılabilir ve genişletilebilir bir `BaseService` üzerinden yönetilir.  
+  `HttpClientService` ile HTTP istekleri merkezi olarak yönetilir.
+- **Interceptor:**  
+  Tüm isteklerde otomatik olarak header ekleyen bir `AuthInterceptor` bulunur.
 
-```bash
-ng serve
+## Proje Yapısı
+
+```
+src/
+  app/
+    pages/
+      products/         # Ürün listeleme ve yönetim bileşenleri
+      layout/           # Uygulama genel düzeni
+    services/
+      base.service.ts   # Generic CRUD işlemleri için temel servis
+      product.service.ts# Ürünlere özel servis (BaseService'ten türetilmiş)
+      http-client.service.ts # HttpClient sarmalayıcı servis
+    interceptors/
+      auth.interceptor.ts # Tüm isteklerde header ekleyen interceptor
+  environments/
+    environment.ts      # API adresi ve ortam değişkenleri
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Kullanılan Teknolojiler
 
-## Code scaffolding
+- Angular
+- Ng Zorro (ng-zorro-antd)
+- RxJS
+- TypeScript
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Kurulum ve Çalıştırma
 
-```bash
-ng generate component component-name
-```
+1. **Bağımlılıkları yükleyin:**
+   ```bash
+   npm install
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. **Projeyi başlatın:**
+   ```bash
+   ng serve
+   ```
 
-```bash
-ng generate --help
-```
+3. **Uygulamayı açın:**
+   ```
+   http://localhost:4200
+   ```
 
-## Building
+## Servis Mimarisi
 
-To build the project run:
+- **BaseService:**  
+  Tüm temel HTTP işlemleri (`get`, `post`, `put`, `delete`) burada tanımlanır.  
+  Her kaynak için (ör: ürünler) özel servisler bu sınıftan türetilir.
 
-```bash
-ng build
-```
+- **HttpClientService:**  
+  Angular'ın HttpClient'ini saran ve merkezi HTTP işlemleri sağlayan servis.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- **ProductService:**  
+  Ürünlere özel işlemler için, `BaseService`'ten türetilmiş bir servis.
 
-## Running unit tests
+## Geliştirme Yol Haritası
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- [x] Ürünleri listele (GET)
+- [ ] Ürün ekle (POST)
+- [ ] Ürün güncelle (UPDATE)
+- [ ] Ürün sil (DELETE)
+- [ ] Form validasyonları ve hata yönetimi
+- [ ] Daha fazla dinamik bileşen ve örnek
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Not:**  
+API olarak [dummyjson.com](https://dummyjson.com) kullanılmaktadır.  
+Geliştirme ortamı için `src/environments/environment.ts` dosyasındaki `apiUrl` güncellenebilir.
